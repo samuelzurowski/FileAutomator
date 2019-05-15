@@ -1,0 +1,11 @@
+{
+    "extensions": [
+      ".png",
+      ".pdf",
+      ".html",
+      ".docx", 
+      ".pptx", 
+      ".jpg", 
+      ".md"
+    ]
+  }
