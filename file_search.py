@@ -5,16 +5,19 @@ from zipfile import ZipFile
 class FileSweeper:
 
     compress_extensions = []
-    root_directory = ""
+    root = ""
     json_file = ""
 
     def __init__(self, root, file):
-        self.root_directory = root
+        self.root = root
         self.json_file = file
         self.load_JSON()
 
-    def setRoot(self, path):
-        self.root_directory = path
+    def getRoot(self):
+        return self.root
+    
+    def setRoot(self, root):
+        self.root = root
         self.load_JSON()
     
     def set_JSON(self, file):
@@ -30,15 +33,20 @@ class FileSweeper:
     def get_tree_size(self, path):
         """ gets the transerve size of the tree """
         try:
-            total = 0
-            for entry in os.scandir(path):
-
-                if not entry.name.startswith('.') and entry.is_dir():
-                    total += self.get_tree_size(entry.path)
-
-                else: total += entry.stat(follow_symlinks=False).st_size
+            total = self.tree_scan(path)
         except PermissionError:
             pass
+        return total
+
+    def tree_scan(self, path):
+        """ Interface for accessing in get_tree_size function"""
+        total = 0
+        for entry in os.scandir(path):
+
+            if not entry.name.startswith('.') and entry.is_dir():
+                total += self.get_tree_size(entry.path)
+
+            else: total += entry.stat(follow_symlinks=False).st_size
         return total
 
     def check_file_ext(self, path, file):
@@ -56,7 +64,7 @@ class FileSweeper:
 
     def search_file_tree(self):
         """ Finds the file paths directories """
-        for dirName, dirs, files in os.walk(self.root_directory, topdown=False):
+        for dirName, dirs, files in os.walk(self.root, topdown=False):
             print("Found directory ", dirName)
 
             for f in files: self.check_file_ext(dirName, f)
