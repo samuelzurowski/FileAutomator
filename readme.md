@@ -16,6 +16,5 @@ jsonfile - the file used for all the config look at the github example for the j
 ```
 
 ### TODO
-- Add cleaning downloads folder option
 - centralize where all the zip files go (possibly)
 - find more ideas for it

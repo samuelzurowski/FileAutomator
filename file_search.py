@@ -4,12 +4,13 @@ from zipfile import ZipFile
 
 message = ("""\
 Incorrect Usage:
-    clean.py [directory] [jsonfile]
+    clean.py {[cleanfolder]} {[directory] [jsonfile]}
 
 parameters:
     directory - where the sweep will be done
     jsonfile - the file used for all the config
         look at the github example for the jsonfile format
+    cleanfolder - the directory that you want to remove all files
 """)
 
 class FileSweeper:
