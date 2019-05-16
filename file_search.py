@@ -17,7 +17,6 @@ class FileSweeper:
     compress_extensions = []
     root = ""
     json_file = ""
-
     def __init__(self, root, file):
         self.setRoot(root)
         self.set_JSON(file)
