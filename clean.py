@@ -3,7 +3,6 @@ import sys
 
 def main():
     if len(sys.argv) == 3:
-        print('hi!')
         f = FileSweeper(sys.argv[1], sys.argv[2])
         f.search_file_tree()
         total = f.get_tree_size(f.getRoot())
