@@ -21,12 +21,18 @@ class FileSweeper:
     def __init__(self, root, file):
         self.setRoot(root)
         self.set_JSON(file)
+    
+    def check_dir(self):
+        if not os.path.isdir(self.root):
+            print("This path is invalid try again")
+            exit(0)
 
     def getRoot(self):
         return self.root
     
     def setRoot(self, root):
         self.root = root
+        self.check_dir()
     
     def set_JSON(self, file):
         self.json_file = file
@@ -34,10 +40,20 @@ class FileSweeper:
 
     def load_JSON(self):
         """ load the file extensions used from json file """
-        with open(self.json_file) as file:
-            data = json.load(file)
-            for ext in data['extensions']: 
-                self.compress_extensions.append(ext)
+        try:
+            with open(self.json_file) as file:
+                data = json.load(file)
+                if not len(data['extensions']):
+                    print("No extensions defined in the json file")
+                    exit(0)
+                for ext in data['extensions']: 
+                    self.compress_extensions.append(ext)
+        except FileNotFoundError:
+            print("File is not found aborting...")
+            exit(0)
+        except json.decoder.JSONDecodeError:
+            print("Incorrect JSON format check github pages for more information")
+            exit(0)
 
     def get_tree_size(self, path):
         """ gets the transerve size of the tree """
