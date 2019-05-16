@@ -2,6 +2,16 @@ import json
 import os
 from zipfile import ZipFile
 
+message = ("""\
+Incorrect Usage:
+    clean.py [directory] [jsonfile]
+
+parameters:
+    directory - where the sweep will be done
+    jsonfile - the file used for all the config
+        look at the github example for the jsonfile format
+""")
+
 class FileSweeper:
 
     compress_extensions = []
@@ -9,16 +19,14 @@ class FileSweeper:
     json_file = ""
 
     def __init__(self, root, file):
-        self.root = root
-        self.json_file = file
-        self.load_JSON()
+        self.setRoot(root)
+        self.set_JSON(file)
 
     def getRoot(self):
         return self.root
     
     def setRoot(self, root):
         self.root = root
-        self.load_JSON()
     
     def set_JSON(self, file):
         self.json_file = file
@@ -28,31 +36,27 @@ class FileSweeper:
         """ load the file extensions used from json file """
         with open(self.json_file) as file:
             data = json.load(file)
-            for ext in data['extensions']: self.compress_extensions.append(ext)
+            for ext in data['extensions']: 
+                self.compress_extensions.append(ext)
 
     def get_tree_size(self, path):
         """ gets the transerve size of the tree """
         try:
-            total = self.tree_scan(path)
-        except PermissionError:
+            total = 0
+            for entry in os.scandir(path):
+                if not entry.name.startswith('.') and entry.is_dir():
+                    total += self.get_tree_size(entry.path)
+                else: 
+                    total += entry.stat(follow_symlinks=False).st_size
+        except OSError:
             pass
-        return total
-
-    def tree_scan(self, path):
-        """ Interface for accessing in get_tree_size function"""
-        total = 0
-        for entry in os.scandir(path):
-
-            if not entry.name.startswith('.') and entry.is_dir():
-                total += self.get_tree_size(entry.path)
-
-            else: total += entry.stat(follow_symlinks=False).st_size
         return total
 
     def check_file_ext(self, path, file):
         """ if specific file ext zips and remove old file """
         ext = os.path.splitext(file)
-        if ext[1] in self.compress_extensions and len(ext) < 3: self.zip_file(path, file)
+        if ext[1] in self.compress_extensions and len(ext) < 3: 
+            self.zip_file(path, file)
 
     def zip_file(self, path, file):
         """ zips the file """
