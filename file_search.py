@@ -23,6 +23,7 @@ class FileSweeper:
         self.set_JSON(file)
     
     def check_dir(self):
+        """ Check for a invalid root directory"""
         if not os.path.isdir(self.root):
             print("This path is invalid try again")
             exit(0)

@@ -21,9 +21,9 @@ def main():
         try:
             for file in os.listdir(sys.argv[1]):
                 os.remove(sys.argv[1] + '/' + file)
-                print(file)
+                print("Removed: ", file)
         except PermissionError:
-            print("You do not have permissions to do this file modify permissions to be able to.")
+            print("You do not have permissions to do modify this file.")
             exit(0)
         else:
             print("{} is not a directory".format(sys.argv[1]))
